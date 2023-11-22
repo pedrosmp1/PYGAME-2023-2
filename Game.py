@@ -39,7 +39,15 @@ read = file.readlines()
 high_score = int(read[0])
 lifetime = int(read[1])
 file.close()
-
+def modify_player_info():
+    global high_score, lifetime
+    if distance > high_score:
+        high_score = distance
+    lifetime += distance
+    file = open('player_info.txt', 'w')
+    file.write(str(int(high_score)) + '\n')
+    file.write(str(int(lifetime)))
+    file.close()
 
 class GameScreen:
     def __init__(self, width, height, bg_color, game_speed, font):
@@ -227,7 +235,7 @@ restart_btn, quit_btn = pause_menu.draw_menu()
 player = Player(init_y=HEIGHT - 130)
 rocket = Rocket()
 game_screen = GameScreen(WIDTH, HEIGHT)
-laser = Laser(WIDTH, HEIGHT)
+laser = LaserGenerator(WIDTH, HEIGHT)
 
 run = True
 while run:
