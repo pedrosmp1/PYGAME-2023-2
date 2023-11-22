@@ -130,16 +130,25 @@ shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 16
 
 
 class Piece(object):
-    rows = 20  # y
-    columns = 10  # x
+    y = 20  
+    x = 10  
 
-    def __init__(self, column, row, shape):
-        self.x = column
-        self.y = row
+    def __init__(self, x, y, shape):
+        self.x = x
+        self.y = y
         self.shape = shape
         self.color = shape_colors[shapes.index(shape)]
         self.rotation = 0  # number from 0-3
 
+pygame.mixer.init()
+pygame.mixer.music.load('sounds/arcade.mp3')  # Replace 'background_music.mp3' with your actual music file
+pygame.mixer.music.set_volume(0.5) 
+
+pygame.mixer.music.play(-1)  # -1 means loop indefinitely
+
+
+clear_row_sound = pygame.mixer.Sound('clear_row_sound.wav')  # Replace 'clear_row_sound.wav' with your actual sound file
+clear_row_sound.set_volume(0.5)  # Adjust the volume as needed
 
 def create_grid(locked_positions={}):
     grid = [[(0,0,0) for x in range(10)] for x in range(20)]
@@ -157,9 +166,9 @@ def convert_shape_format(shape):
     format = shape.shape[shape.rotation % len(shape.shape)]
 
     for i, line in enumerate(format):
-        row = list(line)
-        for j, column in enumerate(row):
-            if column == '0':
+        y = list(line)
+        for j, x in enumerate(y):
+            if x == '0':
                 positions.append((shape.x + j, shape.y + i))
 
     for i, pos in enumerate(positions):
@@ -202,10 +211,10 @@ def draw_text_middle(text, size, color, surface):
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width() / 2), top_left_y + play_height/2 - label.get_height()/2))
 
 
-def draw_grid(surface, row, col):
+def draw_grid(surface, y, col):
     sx = top_left_x
     sy = top_left_y
-    for i in range(row):
+    for i in range(y):
         pygame.draw.line(surface, (128,128,128), (sx, sy+ i*30), (sx + play_width, sy + i * 30))  # horizontal lines
         for j in range(col):
             pygame.draw.line(surface, (128,128,128), (sx + j * 30, sy), (sx + j * 30, sy + play_height))  # vertical lines
@@ -216,12 +225,12 @@ def clear_rows(grid, locked):
 
     inc = 0
     for i in range(len(grid)-1,-1,-1):
-        row = grid[i]
-        if (0, 0, 0) not in row:
+        y = grid[i]
+        if (0, 0, 0) not in y:
             inc += 1
             # add positions to remove from locked
             ind = i
-            for j in range(len(row)):
+            for j in range(len(y)):
                 try:
                     del locked[(j, i)]
                 except:
@@ -232,6 +241,8 @@ def clear_rows(grid, locked):
             if y < ind:
                 newKey = (x, y + inc)
                 locked[newKey] = locked.pop(key)
+    if inc > 0:
+        clear_row_sound.play()
 
 
 def draw_next_shape(shape, surface):
@@ -243,9 +254,9 @@ def draw_next_shape(shape, surface):
     format = shape.shape[shape.rotation % len(shape.shape)]
 
     for i, line in enumerate(format):
-        row = list(line)
-        for j, column in enumerate(row):
-            if column == '0':
+        y = list(line)
+        for j, x in enumerate(y):
+            if x == '0':
                 pygame.draw.rect(surface, shape.color, (sx + j*30, sy + i*30, 30, 30), 0)
 
     surface.blit(label, (sx + 10, sy- 30))
