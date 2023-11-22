@@ -224,4 +224,46 @@ pause_menu = PauseMenu(screen, surface, font, WIDTH, HEIGHT, lifetime)
 # Dentro do loop do jogo
 restart_btn, quit_btn = pause_menu.draw_menu()
 
+player = Player(init_y=HEIGHT - 130)
+rocket = Rocket()
+game_screen = GameScreen(WIDTH, HEIGHT)
+laser = Laser(WIDTH, HEIGHT)
 
+run = True
+while run:
+    timer.tick(fps)
+
+    # Lógica de eventos
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            modify_player_info()
+            run = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                # Toggle pause
+                game_screen.pause = not game_screen.pause
+            elif event.key == pygame.K_SPACE and not game_screen.pause:
+                player.booster = True
+        elif event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+            player.booster = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and game_screen.pause:
+            if game_screen.restart_btn.collidepoint(event.pos):
+                game_screen.restart_cmd = True
+            elif game_screen.quit_btn.collidepoint(event.pos):
+                modify_player_info()
+                run = False
+
+    # Lógica de atualização das classes
+    player.update(gravity)
+    rocket.update(game_screen.pause)
+    game_screen.update(distance, game_screen.new_bg, high_score)
+    laser.update()
+
+    # Lógica de desenho das classes
+    game_screen.draw(laser)
+    player.draw(counter, game_screen.pause)
+    rocket.draw()
+
+    pygame.display.flip()
+
+pygame.quit()
