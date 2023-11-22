@@ -147,7 +147,7 @@ pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)  # -1 means loop indefinitely
 
 
-clear_row_sound = pygame.mixer.Sound('clear_row_sound.wav')  # Replace 'clear_row_sound.wav' with your actual sound file
+clear_row_sound = pygame.mixer.Sound('sounds/complete.mp3')  # Replace 'clear_row_sound.wav' with your actual sound file
 clear_row_sound.set_volume(0.5)  # Adjust the volume as needed
 
 def create_grid(locked_positions={}):
