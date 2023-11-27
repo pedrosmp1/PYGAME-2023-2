@@ -18,7 +18,11 @@ block_size = 30
 
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
-
+file = open('player_info.txt', 'r')
+read = file.readlines()
+high_score = int(read[0])
+lifetime = int(read[1])
+file.close()
 
 # SHAPE FORMATS
 
@@ -150,7 +154,7 @@ pygame.mixer.music.play(-1)  # -1 means loop indefinitely
 
 
 clear_row_sound = pygame.mixer.Sound('sounds/completa.wav')  # Replace 'clear_row_sound.wav' with your actual sound file
-clear_row_sound.set_volume(1)  # Adjust the volume as needed
+clear_row_sound.set_volume(3)  # Adjust the volume as needed
 
 def create_grid(locked_positions={}):
     grid = [[(0,0,0) for x in range(10)] for x in range(20)]
@@ -211,6 +215,7 @@ def draw_text_middle(text, size, color, surface):
     label = font.render(text, 1, color)
 
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width() / 2), top_left_y + play_height/2 - label.get_height()/2))
+    surface.blit(font.render(f'High Score: {int(high_score)} m', True, 'white'), (10, 70))
 
 
 def draw_grid(surface, y, col):
