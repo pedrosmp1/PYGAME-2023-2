@@ -22,6 +22,7 @@ file = open('player_info.txt', 'r')
 read = file.readlines()
 high_score = int(read[0])
 lifetime = int(read[1])
+score=int(read[2])
 file.close()
 
 # SHAPE FORMATS
@@ -161,7 +162,15 @@ pygame.mixer.music.play(-1)  # -1 means loop indefinitely
 
 clear_row_sound = pygame.mixer.Sound('sounds/completa.wav')  # Replace 'clear_row_sound.wav' with your actual sound file
 clear_row_sound.set_volume(3)  # Adjust the volume as needed
+def update_high_score(score):
+    global high_score, lifetime
+    if score > high_score:
+        high_score = score
+        lifetime = max(lifetime, high_score)  # Atualize a variável lifetime se a pontuação atual for maior
+        with open('player_info.txt', 'w') as file:
+            file.write(f"{high_score}\n{lifetime}\n{score}")
 
+            
 def create_grid(locked_positions={}):
     grid = [[(0,0,0) for x in range(10)] for x in range(20)]
 
@@ -221,7 +230,7 @@ def draw_text_middle(text, size, color, surface):
     label = font.render(text, 1, color)
 
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width() / 2), top_left_y + play_height/2 - label.get_height()/2))
-    surface.blit(font.render(f'Record: {int(high_score)} m', True, 'white'), (10, 70))
+    surface.blit(font.render(f'Record: {int(high_score)} m', True, 'black'), (10, 70))
 
 
 def draw_grid(surface, y, col):
@@ -256,6 +265,16 @@ def clear_rows(grid, locked):
                 locked[newKey] = locked.pop(key)
     if inc > 0:
         clear_row_sound.play()
+        # Adicione a seguinte linha para aumentar a pontuação quando as linhas são apagadas
+        global score
+        score += inc
+
+        # Atualize o arquivo "player_info.txt" com o novo valor da pontuação
+        with open('player_info.txt', 'w') as file:
+            file.write(f"{high_score}\n{lifetime}\n{score}")
+    
+        
+        
 
 
 def draw_next_shape(shape, surface):
@@ -292,12 +311,35 @@ def draw_window(surface):
     pygame.draw.rect(surface, (255, 255, 255), (top_left_x, top_left_y, play_width, play_height), 5)
     # pygame.display.update()
 
-def update_high_score(score):
-    global high_score
-    if score > high_score:
-        high_score = score
-        with open('player_info.txt', 'w') as file:
-            file.write(f"{high_score}\n{lifetime}")
+
+
+def draw_game_over(surface, score, high_score):
+    surface.fill((255, 255, 255))  # Cor de fundo preta
+
+    font_large = pygame.font.SysFont('playful', 60)
+    font_small = pygame.font.SysFont('playful', 30)
+
+    label_large = font_large.render('Game Over', 1, (255, 0, 0))
+    label_score = font_small.render(f'Score: {score}', 1, (0, 0, 0))
+    label_high_score = font_small.render(f'High Score: {high_score}', 1, (0, 0, 0))
+    label_instruction = font_small.render('Pressione qualquer tecla para reiniciar', 1, (0, 0, 0))
+
+    surface.blit(label_large, (top_left_x + play_width / 2 - (label_large.get_width() / 2), 200))
+    surface.blit(label_score, (top_left_x + play_width / 2 - (label_score.get_width() / 2), 300))
+    surface.blit(label_high_score, (top_left_x + play_width / 2 - (label_high_score.get_width() / 2), 350))
+    surface.blit(label_instruction, (top_left_x + play_width / 2 - (label_instruction.get_width() / 2), 400))
+
+    pygame.display.update()
+
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                waiting = False
+
 
 def main():
     global grid
@@ -395,6 +437,7 @@ def main():
         # Check if user lost
         if check_lost(locked_positions):
             update_high_score(score)
+            draw_game_over(win, lifetime, high_score)
             run = False
 
     draw_text_middle(f"Você perdeu! Pontuação: {score}", 40, (255,255,255), win)
@@ -402,6 +445,7 @@ def main():
     pygame.display.update()
     pygame.time.delay(2000)
 
+score = 0
 
 def main_menu():
     run = True
