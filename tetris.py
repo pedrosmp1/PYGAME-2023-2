@@ -10,8 +10,8 @@ represented in order by 0 - 6
 pygame.font.init()
 
 # GLOBALS VARS
-s_width = 800
-s_height = 700
+s_width = 1200
+s_height = 800
 play_width = 300  # meaning 300 // 10 = 30 width per block
 play_height = 600  # meaning 600 // 20 = 20 height per blo ck
 block_size = 30
@@ -228,9 +228,9 @@ def draw_grid(surface, y, col):
     sx = top_left_x
     sy = top_left_y
     for i in range(y):
-        pygame.draw.line(surface, (128,128,128), (sx, sy+ i*30), (sx + play_width, sy + i * 30))  # horizontal lines
+        pygame.draw.line(surface, (0,0,0), (sx, sy+ i*30), (sx + play_width, sy + i * 30))  # horizontal lines
         for j in range(col):
-            pygame.draw.line(surface, (128,128,128), (sx + j * 30, sy), (sx + j * 30, sy + play_height))  # vertical lines
+            pygame.draw.line(surface, (0,0,0), (sx + j * 30, sy), (sx + j * 30, sy + play_height))  # vertical lines
 
 
 def clear_rows(grid, locked):
@@ -260,7 +260,7 @@ def clear_rows(grid, locked):
 
 def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('playful', 30)
-    label = font.render('Next Shape', 1, (255,255,255))
+    label = font.render('Next Shape', 1, (0,0,0))
 
     sx = top_left_x + play_width + 50
     sy = top_left_y + play_height/2 - 100
@@ -276,10 +276,10 @@ def draw_next_shape(shape, surface):
 
 
 def draw_window(surface):
-    surface.fill((0,0,0))
+    surface.fill((255,255,255))
     # Tetris Title
     font = pygame.font.SysFont('playful', 60)
-    label = font.render('TETRIS', 1, (255,255,255))
+    label = font.render('TETRIS', 1, (0,0,0))
 
     surface.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 30))
 
@@ -289,7 +289,7 @@ def draw_window(surface):
 
     # draw grid and border
     draw_grid(surface, 20, 10)
-    pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 5)
+    pygame.draw.rect(surface, (255, 255, 255), (top_left_x, top_left_y, play_width, play_height), 5)
     # pygame.display.update()
 
 def main():
@@ -395,8 +395,8 @@ def main():
 def main_menu():
     run = True
     while run:
-        win.fill((0,0,0))
-        draw_text_middle('Aperte qualquer tecla para começar', 60, (255, 255, 255), win)
+        win.fill((255,255,255))
+        draw_text_middle('Aperte qualquer tecla para começar', 60, (0, 0,0), win)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
