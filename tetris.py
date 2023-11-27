@@ -26,7 +26,7 @@ score=int(read[2])
 file.close()
 
 # SHAPE FORMATS
-
+pontos=0
 S = [['.....',
       '.....',
       '..00.',
@@ -230,7 +230,6 @@ def draw_text_middle(text, size, color, surface):
     label = font.render(text, 1, color)
 
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width() / 2), top_left_y + play_height/2 - label.get_height()/2))
-    surface.blit(font.render(f'Record: {int(high_score)} m', True, 'black'), (10, 70))
 
 
 def draw_grid(surface, y, col):
@@ -263,23 +262,21 @@ def clear_rows(grid, locked):
             if y < ind:
                 newKey = (x, y + inc)
                 locked[newKey] = locked.pop(key)
-    if inc > 0:
         clear_row_sound.play()
+        return True
+if clear_rows:
+    pontos+=1
         # Adicione a seguinte linha para aumentar a pontuação quando as linhas são apagadas
-        global score
-        score += inc
+        
 
-        # Atualize o arquivo "player_info.txt" com o novo valor da pontuação
-        with open('player_info.txt', 'w') as file:
-            file.write(f"{high_score}\n{lifetime}\n{score}")
-    
+        # Atualize o arquivo "player_info.txt" com o novo valor da pontua
         
         
 
 
 def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('playful', 30)
-    label = font.render('Next Shape', 1, (0,0,0))
+    label = font.render('Próxima peça:', 1, (0,0,0))
 
     sx = top_left_x + play_width + 50
     sy = top_left_y + play_height/2 - 100
@@ -319,14 +316,12 @@ def draw_game_over(surface, score, high_score):
     font_large = pygame.font.SysFont('playful', 60)
     font_small = pygame.font.SysFont('playful', 30)
 
-    label_large = font_large.render('Game Over', 1, (255, 0, 0))
-    label_score = font_small.render(f'Score: {score}', 1, (0, 0, 0))
-    label_high_score = font_small.render(f'High Score: {high_score}', 1, (0, 0, 0))
+    label_large = font_large.render('Game Over', 30, (255, 0, 0))
+    label_score = font_small.render(f'Pontos: {pontos}', 30, (0, 0, 0))
     label_instruction = font_small.render('Pressione qualquer tecla para reiniciar', 1, (0, 0, 0))
 
     surface.blit(label_large, (top_left_x + play_width / 2 - (label_large.get_width() / 2), 200))
     surface.blit(label_score, (top_left_x + play_width / 2 - (label_score.get_width() / 2), 300))
-    surface.blit(label_high_score, (top_left_x + play_width / 2 - (label_high_score.get_width() / 2), 350))
     surface.blit(label_instruction, (top_left_x + play_width / 2 - (label_instruction.get_width() / 2), 400))
 
     pygame.display.update()
