@@ -128,10 +128,16 @@ T = [['.....',
       '..0..',
       '.....']]
 
+coral = (255, 92, 92)
+verde_menta = (149, 229, 146)
+azul_celeste = (137, 196, 244)
+amarelo_solar = (255, 221, 51)
+rosa_chocante = (255, 51, 153)
+roxo_profundo =(102,51,153)
+turquesa = (64, 224, 208)
 shapes = [S, Z, I, O, J, L, T]
-shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
+shape_colors = [coral, verde_menta, azul_celeste, amarelo_solar, rosa_chocante, roxo_profundo, turquesa]
 # index 0 - 6 represent shape
-
 
 class Piece(object):
     y = 20  
