@@ -292,9 +292,17 @@ def draw_window(surface):
     pygame.draw.rect(surface, (255, 255, 255), (top_left_x, top_left_y, play_width, play_height), 5)
     # pygame.display.update()
 
+def update_high_score(score):
+    global high_score
+    if score > high_score:
+        high_score = score
+        with open('player_info.txt', 'w') as file:
+            file.write(f"{high_score}\n{lifetime}")
+
 def main():
     global grid
     global start_time
+    global lifetime
 
     locked_positions = {}  # (x, y): (255, 0, 0)
     grid = create_grid(locked_positions)
@@ -307,6 +315,7 @@ def main():
     fall_time = 0
     speed_increase_factor = 1.2  # Ajuste esse valor para controlar a taxa de aumento de velocidade
     start_time = pygame.time.get_ticks()  # Adicione esta linha para registrar o tempo inicial
+    score = 0
 
     while run:
         base_fall_speed = 0.27
@@ -385,9 +394,11 @@ def main():
 
         # Check if user lost
         if check_lost(locked_positions):
+            update_high_score(score)
             run = False
 
-    draw_text_middle("Você perdeu!", 40, (255,255,255), win)
+    draw_text_middle(f"Você perdeu! Pontuação: {score}", 40, (255,255,255), win)
+    draw_text_middle(f"Maior Pontuação: {high_score}", 30, (255,255,255), win)
     pygame.display.update()
     pygame.time.delay(2000)
 
