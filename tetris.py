@@ -211,7 +211,7 @@ def get_shape():
 
 
 def draw_text_middle(text, size, color, surface):
-    font = pygame.font.SysFont('comicsans', size, bold=True)
+    font = pygame.font.SysFont('playful', size, bold=True)
     label = font.render(text, 1, color)
 
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width() / 2), top_left_y + play_height/2 - label.get_height()/2))
@@ -253,7 +253,7 @@ def clear_rows(grid, locked):
 
 
 def draw_next_shape(shape, surface):
-    font = pygame.font.SysFont('comicsans', 30)
+    font = pygame.font.SysFont('playful', 30)
     label = font.render('Next Shape', 1, (255,255,255))
 
     sx = top_left_x + play_width + 50
@@ -272,7 +272,7 @@ def draw_next_shape(shape, surface):
 def draw_window(surface):
     surface.fill((0,0,0))
     # Tetris Title
-    font = pygame.font.SysFont('arial', 60)
+    font = pygame.font.SysFont('playful', 60)
     label = font.render('TETRIS', 1, (255,255,255))
 
     surface.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 30))
