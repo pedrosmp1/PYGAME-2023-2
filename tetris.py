@@ -310,6 +310,7 @@ def main():
         fall_time += clock.get_rawtime()
         clock.tick()
 
+
         # PIECE FALLING CODE
         if fall_time/1000 >= fall_speed:
             fall_time = 0
