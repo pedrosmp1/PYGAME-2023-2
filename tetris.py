@@ -272,7 +272,7 @@ def draw_next_shape(shape, surface):
 def draw_window(surface):
     surface.fill((0,0,0))
     # Tetris Title
-    font = pygame.font.SysFont('comicsans', 60)
+    font = pygame.font.SysFont('arial', 60)
     label = font.render('TETRIS', 1, (255,255,255))
 
     surface.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 30))
