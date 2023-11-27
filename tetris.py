@@ -286,11 +286,11 @@ def draw_window(surface):
     pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 5)
     # pygame.display.update()
 
-
 def main():
     global grid
+    global start_time
 
-    locked_positions = {}  # (x,y):(255,0,0)
+    locked_positions = {}  # (x, y): (255, 0, 0)
     grid = create_grid(locked_positions)
 
     change_piece = False
@@ -299,9 +299,12 @@ def main():
     next_piece = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
+    speed_increase_factor = 1.2  # Ajuste esse valor para controlar a taxa de aumento de velocidade
+    start_time = pygame.time.get_ticks()  # Adicione esta linha para registrar o tempo inicial
 
     while run:
-        fall_speed = 0.27
+        base_fall_speed = 0.27
+        fall_speed = base_fall_speed / speed_increase_factor**((pygame.time.get_ticks() - start_time) / 10000)
 
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
