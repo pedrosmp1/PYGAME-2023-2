@@ -221,7 +221,7 @@ def draw_text_middle(text, size, color, surface):
     label = font.render(text, 1, color)
 
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width() / 2), top_left_y + play_height/2 - label.get_height()/2))
-    surface.blit(font.render(f'High Score: {int(high_score)} m', True, 'white'), (10, 70))
+    surface.blit(font.render(f'Record: {int(high_score)} m', True, 'white'), (10, 70))
 
 
 def draw_grid(surface, y, col):
@@ -387,7 +387,7 @@ def main():
         if check_lost(locked_positions):
             run = False
 
-    draw_text_middle("You Lost", 40, (255,255,255), win)
+    draw_text_middle("Você perdeu!", 40, (255,255,255), win)
     pygame.display.update()
     pygame.time.delay(2000)
 
@@ -396,7 +396,7 @@ def main_menu():
     run = True
     while run:
         win.fill((0,0,0))
-        draw_text_middle('Press any key to begin.', 60, (255, 255, 255), win)
+        draw_text_middle('Aperte qualquer tecla para começar', 60, (255, 255, 255), win)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
