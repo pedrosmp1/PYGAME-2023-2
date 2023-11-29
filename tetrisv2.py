@@ -26,7 +26,7 @@ score=int(read[2])
 file.close()
 
 # SHAPE FORMATS
-pontos=0
+
 S = [['.....',
       '.....',
       '..00.',
@@ -256,6 +256,7 @@ def clear_rows(grid, locked):
                     del locked[(j, i)]
                 except:
                     continue
+        
     if inc > 0:
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
             x, y = key
@@ -264,8 +265,8 @@ def clear_rows(grid, locked):
                 locked[newKey] = locked.pop(key)
         clear_row_sound.play()
         return True
-if clear_rows:
-    pontos+=1
+    return False
+
         # Adicione a seguinte linha para aumentar a pontuação quando as linhas são apagadas
         
 
@@ -310,14 +311,14 @@ def draw_window(surface):
 
 
 
-def draw_game_over(surface, pontos, high_score):
+def draw_game_over(surface, score, high_score):
     surface.fill((255, 255, 255))  # Cor de fundo preta
 
     font_large = pygame.font.SysFont('playful', 60)
     font_small = pygame.font.SysFont('playful', 30)
 
     label_large = font_large.render('Game Over', 30, (255, 0, 0))
-    label_score = font_small.render(f'Pontos: {pontos}', 30, (0, 0, 0))
+    label_score = font_small.render(f'Pontos: {score}', 30, (0, 0, 0))
     label_instruction = font_small.render('Pressione qualquer tecla para reiniciar', 1, (0, 0, 0))
 
     surface.blit(label_large, (top_left_x + play_width / 2 - (label_large.get_width() / 2), 200))
@@ -334,11 +335,6 @@ def draw_game_over(surface, pontos, high_score):
                 quit()
             if event.type == pygame.KEYDOWN:
                 waiting = False
-
-# def draw_score(surface, pontos):
-#     font = pygame.font.SysFont('playful', 30)
-#     label = font.render(f'Pontuação: {pontos}', 1, (0, 0, 0))
-#     surface.blit(label, (top_left_x + play_width + 50, top_left_y + play_height / 2 + 100))
 
 
 def main():
@@ -358,8 +354,7 @@ def main():
     speed_increase_factor = 1.2  # Ajuste esse valor para controlar a taxa de aumento de velocidade
     start_time = pygame.time.get_ticks()  # Adicione esta linha para registrar o tempo inicial
     score = 0
-
-
+    pontos=0
     while run:
         base_fall_speed = 0.27
         fall_speed = base_fall_speed / speed_increase_factor**((pygame.time.get_ticks() - start_time) / 10000)
@@ -367,7 +362,6 @@ def main():
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
         clock.tick()
-        
 
 
         # PIECE FALLING CODE
@@ -428,22 +422,20 @@ def main():
             current_piece = next_piece
             next_piece = get_shape()
             change_piece = False
-            if clear_rows(grid, locked_positions):
-                score += pontos
 
-            # call four times to check for multiple clear rows
-            clear_rows(grid, locked_positions)
-        
+            
+            limpar=clear_rows(grid, locked_positions)
+            if limpar:
+                pontos+=1
 
         draw_window(win)
         draw_next_shape(next_piece, win)
-        #draw_score(win, pontos)
         pygame.display.update()
 
         # Check if user lost
         if check_lost(locked_positions):
             update_high_score(score)
-            draw_game_over(win, lifetime, high_score)
+            draw_game_over(win, pontos, high_score)
             run = False
 
     draw_text_middle(f"Você perdeu! Pontuação: {pontos}", 40, (255,255,255), win)
@@ -471,4 +463,4 @@ def main_menu():
 win = pygame.display.set_mode((s_width, s_height))
 pygame.display.set_caption('Tetris')
 
-main_menu()  # start game
+main_menu() 
