@@ -266,6 +266,7 @@ def clear_rows(grid, locked):
         return True
 if clear_rows:
     pontos+=1
+    score += pontos
         # Adicione a seguinte linha para aumentar a pontuação quando as linhas são apagadas
         
 
@@ -334,6 +335,11 @@ def draw_game_over(surface, score, high_score):
                 quit()
             if event.type == pygame.KEYDOWN:
                 waiting = False
+
+def draw_score(surface, score):
+    font = pygame.font.SysFont('playful', 30)
+    label = font.render(f'Pontuação: {pontos}', 1, (0, 0, 0))
+    surface.blit(label, (top_left_x + play_width + 50, top_left_y + play_height / 2 + 100))
 
 
 def main():
@@ -421,12 +427,15 @@ def main():
             current_piece = next_piece
             next_piece = get_shape()
             change_piece = False
+            if clear_rows(grid, locked_positions):
+                score += pontos
 
             # call four times to check for multiple clear rows
             clear_rows(grid, locked_positions)
 
         draw_window(win)
         draw_next_shape(next_piece, win)
+        draw_score(win, score)
         pygame.display.update()
 
         # Check if user lost
